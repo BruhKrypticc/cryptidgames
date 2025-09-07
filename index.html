@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; font-family: 'Inter', sans-serif; background: black; color: white; overflow-x: hidden; font-weight: 800; scroll-behavior: smooth; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: black; color: white; overflow-x: hidden; font-weight: 800; }
 
     /* Loading Screen */
     #loading-screen {
@@ -50,7 +50,6 @@
       min-height: 100vh;
       display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
       padding-left: 11vw; gap: .5em;
-      position: relative;
     }
     @media(min-width: 900px) {
       #hero { background-attachment: fixed; }
@@ -68,18 +67,7 @@
     @keyframes fadeInUp{to{opacity:1;transform:translateY(0);}} 
 
     /* Projects */
-    #projects { 
-      background:url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover no-repeat; 
-      background-color:rgba(0,0,0,0.3); 
-      min-height:100vh; 
-      display:flex; 
-      flex-direction:column; 
-      justify-content:center; 
-      align-items:center; 
-      padding:8vh 20px; 
-      text-align:center; 
-      position: relative;
-    }
+    #projects { background:url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover fixed; background-color:rgba(0,0,0,0.3); min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:8vh 20px; text-align:center; }
     @media(min-width: 900px) {
       #projects { background-attachment: fixed; }
     }
@@ -140,9 +128,15 @@
       height:24px;
     }
 
-    /* Mobile Optimization */
+    /* Mobile optimization */
     @media(max-width:900px){
-      #hero, #projects { padding-left: 5vw; text-align: center; align-items: center; background-position: center; }
+      #hero, #projects {
+        background-attachment: scroll !important;
+        background-position: center !important;
+        text-align: center;
+        align-items: center;
+        padding-left: 5vw;
+      }
       .fade-container { font-size: 2em; align-items: center; }
       .fade-main { justify-content: center; }
       .fade-text { font-size: 2em; }
@@ -290,4 +284,3 @@
 
 </body>
 </html>
-
