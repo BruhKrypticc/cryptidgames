@@ -46,11 +46,13 @@
 
     /* Hero */
     #hero {
-      background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/realcgbg.PNG?raw=true') center/115% no-repeat fixed;
-      background-color: rgba(0,0,0,0.2);
+      background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/realcgbg.PNG?raw=true') center/cover no-repeat;
       min-height: 100vh;
       display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-      padding-left: 8vw; gap: .5em;
+      padding-left: 11vw; gap: .5em;
+    }
+    @media(min-width: 900px) {
+      #hero { background-attachment: fixed; }
     }
     .title { font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 10px; text-transform: uppercase; opacity: 0; transform: translateY(20px); animation: fadeInUp 1s ease 0.3s forwards; }
 
@@ -135,7 +137,7 @@
 
   <!-- Loading Screen -->
   <div id="loading-screen">
-    <video id="loading-video" autoplay muted loop>
+    <video id="loading-video" autoplay muted loop playsinline>
       <source src="https://github.com/BruhKrypticc/cryptidgames/raw/refs/heads/main/Overlay%20Super%20Black%20Background%20With%20Scratch%20And%20Dust%20Screen%20%20For%2016%2035mm.mp4" type="video/mp4">
     </video>
     <img id="loading-logo" src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled333_20250725100632.PNG?raw=true" alt="Logo" />
