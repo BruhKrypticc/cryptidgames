@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cryptid Games</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; font-family: 'Inter', sans-serif; background: black; color: white; overflow-x: hidden; font-weight: 800; }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      overflow: hidden;
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    #loading-video {
+      position: absolute;
+      top: 50%; left: 50%;
+      min-width: 100%; min-height: 100%;
+      width: auto; height: auto;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      filter: brightness(0.5);
+    }
+    #loading-logo {
+      position: relative;
+      z-index: 2;
+      width: 200px;
+    }
+    #loading-screen.fade-out {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none;
+    }
+
+    /* Hero */
+    #hero {
+      background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/realcgbg.PNG?raw=true') center/115% no-repeat fixed;
+      background-color: rgba(0,0,0,0.2);
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      padding-left: 8vw; gap: .5em;
+    }
+    .title { font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 10px; text-transform: uppercase; opacity: 0; transform: translateY(20px); animation: fadeInUp 1s ease 0.3s forwards; }
+
+    .fade-container { display: inline-flex; flex-direction: column; align-items: flex-start; font-size: 2.5em; font-weight: 800; opacity: 0; transform: translateY(20px); animation: fadeInUp 1s ease 0.6s forwards; white-space: nowrap; }
+    .fade-main { display: inline-flex; align-items: center; white-space: nowrap; }
+    .static-text { margin-right: 0; }
+    .fade-text-wrapper { position: relative; height: 1.2em; width: auto; }
+    .fade-text { position: absolute; top:0; left:0; font-size:1em; font-weight:800; color:white; opacity:0; transition: opacity 0.3s ease; }
+    .fade-subtext { font-family:'Comic Sans MS',cursive; font-size:0.6em; opacity:0; margin-left:0; margin-top:0.2em; }
+    .arrow-button { margin-top:30px;width:50px;height:50px;border:2px solid white;background:transparent;border-radius:50%;cursor:pointer;display:flex;justify-content:center;align-items:center;color:white;font-size:1.8rem;transition:all .3s ease;animation:fadeInUp 1s ease 1.2s forwards;opacity:0;transform:translateY(20px);} 
+    .arrow-button:hover{background:white;color:black;transform:scale(1.1);}
+    @keyframes fadeInUp{to{opacity:1;transform:translateY(0);}} 
+
+    /* Projects */
+    #projects { background:url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover fixed; background-color:rgba(0,0,0,0.3); min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:8vh 20px; text-align:center; }
+    .projects-title-container{margin-bottom:60px;}
+    .roblox-game-title{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:14px;text-transform:uppercase;}
+    #projects h2{font-family:'Inter',sans-serif;font-weight:800;font-size:60px;}
+    .projects-container{display:flex;flex-wrap:wrap;gap:40px;justify-content:center;align-items:center;max-width:1400px;width:100%;}
+    .project-card{opacity:0;transform:translateY(20px);background:transparent;border-radius:10px;padding:0;width:240px;height:240px;color:white;text-align:center;transition:transform 0.2s ease;cursor:pointer;display:flex;justify-content:center;align-items:center;}
+    .project-card.visible{opacity:1;transform:translateY(0);}
+    .project-card:hover{transform: scale(1.05);}
+    .project-logo{width:100%;height:100%;object-fit:contain;border-radius:10px;pointer-events:none;background:transparent;}
+
+    /* Soundtrack */
+    #soundtrack { position: relative; min-height:55vh; display:flex; align-items:center; justify-content:center; padding:0 10vw; background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover no-repeat; }
+    #soundtrack::after { content:""; position:absolute; top:0; left:0; right:0; bottom:0; background-color: rgba(128,128,128,0.3); z-index:0; }
+    #soundtrack > * { position:relative; z-index:1; }
+    .soundtrack-container { display:flex; width:100%; max-width:1200px; z-index:1; gap:50px; align-items:center; justify-content:space-between; }
+    .soundtrack-embed { flex:1; min-width:300px; height:352px; border-radius:12px; }
+    .soundtrack-text { flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+    .under-shadows { font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:10px; text-transform:uppercase; margin-bottom:10px; }
+    .soundtrack-title { font-family:'Inter',sans-serif; font-weight:800; font-size:45px; }
+
+    /* Modal */
+    #game-modal { position: fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0; pointer-events:none; transition:opacity .5s ease; z-index:1000; }
+    #game-modal.visible { opacity:1; pointer-events:auto; }
+    #modal-slideshow { position: relative; width:100%; height:100%; overflow:hidden; z-index:100; }
+    .modal-bg-image { position:absolute; top:0; left:0; right:0; bottom:0; background-size:cover; background-position:center; background-repeat:no-repeat; opacity:0; transition:opacity 1s ease; }
+    .modal-bg-image.active { opacity:1; }
+    #close-modal { position:absolute; top:20px; right:20px; font-size:2rem; cursor:pointer; color:white; transition:.3s; z-index:1100; }
+    #close-modal:hover { transform:rotate(90deg) scale(1.1); color:gray; }
+    #modal-logo { position:absolute; bottom:20px; right:20px; height:80px; border-radius:10px; z-index:1100; animation:fadeInUp .8s ease forwards; }
+
+    /* Footer */
+    footer {
+      background:#111;
+      padding:30px 0;
+      text-align:center;
+    }
+    .footer-social {
+      display:inline-flex;
+      gap:20px;
+    }
+    .footer-social a {
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      width:50px;
+      height:50px;
+      border:1px solid white;
+      border-radius:50%;
+      transition: transform 0.3s ease;
+    }
+    .footer-social a:hover {
+      transform: scale(1.1);
+    }
+    .footer-social img {
+      width:24px;
+      height:24px;
+    }
+
+    @media(max-width:900px){
+      .soundtrack-container{flex-direction:column; text-align:center; align-items:center;}
+      .soundtrack-text{align-items:center; margin-top:20px;}
+      .fade-container { font-size: 2em; }
+      .fade-text { font-size: 2em; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <video id="loading-video" autoplay muted loop>
+      <source src="https://github.com/BruhKrypticc/cryptidgames/raw/refs/heads/main/Overlay%20Super%20Black%20Background%20With%20Scratch%20And%20Dust%20Screen%20%20For%2016%2035mm.mp4" type="video/mp4">
+    </video>
+    <img id="loading-logo" src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled333_20250725100632.PNG?raw=true" alt="Logo" />
+  </div>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="title">CRYPTID GAMES</div>
+    <div class="fade-container">
+      <div class="fade-main">
+        <span class="static-text">we are&nbsp</span>
+        <div class="fade-text-wrapper">
+          <div class="fade-text" data-show-pyrit="false">devs</div>
+          <div class="fade-text" data-show-pyrit="false">spooky</div>
+          <div class="fade-text" data-show-pyrit="false">cryptic</div>
+          <div class="fade-text" data-show-pyrit="true">qold's portfolio</div>
+        </div>
+      </div>
+      <div class="fade-subtext" id="pyritSubtext">and pyrits too!</div>
+    </div>
+    <button class="arrow-button" id="arrow-down">↓</button>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="projects-title-container">
+      <div class="roblox-game-title">ROBLOX GAME</div>
+      <h2>PROJECTS</h2>
+    </div>
+    <div class="projects-container">
+      <div class="project-card" data-game="ironbound" data-logo="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/ironbound.PNG?raw=true">
+        <img src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/ironbound.PNG?raw=true" class="project-logo" />
+      </div>
+      <div class="project-card" data-game="hideout" data-logo="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/hideout.PNG?raw=true">
+        <img src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/hideout.PNG?raw=true" class="project-logo" />
+      </div>
+      <div class="project-card" data-game="undershadows" data-logo="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/undershadows.PNG?raw=true">
+        <img src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/undershadows.PNG?raw=true" class="project-logo" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Soundtrack -->
+  <section id="soundtrack">
+    <div class="soundtrack-container">
+      <iframe class="soundtrack-embed" src="https://open.spotify.com/embed/album/5bGQyQwWGTRyOA3WuUfcZn?utm_source=generator&theme=0" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      <div class="soundtrack-text">
+        <div class="under-shadows">UNDER SHADOWS</div>
+        <div class="soundtrack-title">SOUNDTRACK</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fullscreen Modal -->
+  <div id="game-modal">
+    <div id="close-modal">✖</div>
+    <img id="modal-logo" src="" alt="Game Logo" />
+    <div id="modal-slideshow"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-social">
+      <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/discord-logo.png" alt="Discord" /></a>
+      <a href="https://www.youtube.com/@OfficialCryptidGames"><img src="https://img.icons8.com/ios-filled/50/ffffff/youtube-play.png" alt="YouTube" /></a>
+      <a href="https://www.roblox.com/groups/32656125/CrypticGames#!/about"><img src="https://img.icons8.com/ios-filled/50/ffffff/roblox.png" alt="Roblox" /></a>
+    </div>
+  </footer>
+
+  <script>
+    // Loading Screen
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loading-screen');
+      setTimeout(() => {
+        loader.classList.add('fade-out');
+        setTimeout(() => { loader.style.display = 'none'; }, 1000);
+      }, 3500);
+    });
+
+    // Hero fade text
+    const subtext = document.getElementById('pyritSubtext');
+    const fadeTexts = document.querySelectorAll('.fade-text');
+    let fadeIndex = 0;
+    function showFadeText() {
+      fadeTexts.forEach(t => t.style.opacity = 0);
+      const current = fadeTexts[fadeIndex];
+      current.style.opacity = 1;
+      subtext.style.opacity = current.dataset.showPyrit === "true" ? 1 : 0;
+      fadeIndex = (fadeIndex + 1) % fadeTexts.length;
+    }
+    showFadeText();
+    setInterval(showFadeText, 2000);
+
+    // Project cards animation
+    const cards=document.querySelectorAll('.project-card');
+    const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target);}})},{threshold:0.2});
+    cards.forEach(c=>observer.observe(c));
+
+    // Modal
+    const gameImages={
+      ironbound:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%282%29.PNG?raw=true"],
+      hideout:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%283%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%201%20%282%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%202%20%282%29.PNG?raw=true"],
+      undershadows:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%203.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%202.PNG?raw=true"]
+    };
+    const modal=document.getElementById('game-modal');
+    const modalLogo=document.getElementById('modal-logo');
+    const modalSlide=document.getElementById('modal-slideshow');
+    document.querySelectorAll('.project-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        modal.classList.add('visible');
+        modalLogo.src=card.dataset.logo;
+        modalSlide.innerHTML='';
+        gameImages[card.dataset.game].forEach(img=>{
+          const div=document.createElement('div');
+          div.className='modal-bg-image';
+          div.style.backgroundImage=`url(${img})`;
+          modalSlide.appendChild(div);
+        });
+        const slides=modalSlide.querySelectorAll('.modal-bg-image');
+        let i=0;
+        slides[i].classList.add('active');
+        setInterval(()=>{
+          slides.forEach(s=>s.classList.remove('active'));
+          i=(i+1)%slides.length;
+          slides[i].classList.add('active');
+        },3000);
+      });
+    });
+    document.getElementById('close-modal').addEventListener('click',()=>{modal.classList.remove('visible');});
+  </script>
+
+</body>
+</html>
+
+
