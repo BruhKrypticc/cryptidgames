@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 | Cryptid Games</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
+<style>
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: #fff;
+  cursor: none;
+}
+
+h1 {
+  font-size: 15rem;
+  margin: 0;
+  letter-spacing: 2rem;
+  z-index: 1;
+  position: relative;
+  mix-blend-mode: difference;
+}
+
+.bottom-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-weight: 800;
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  transition: height 0.05s ease;
+  height: 100px;
+  padding-bottom: 0.5rem;
+}
+
+.line {
+  display: flex;
+  white-space: nowrap;
+}
+
+.line span {
+  margin-right: 3rem;
+  flex-shrink: 0;
+}
+
+.line-inner {
+  display: inline-flex;
+  animation: scroll-left linear infinite;
+}
+.line-inner span {
+  margin-right: 3rem;
+}
+
+#line1 .line-inner { animation-duration: 10s; }
+#line2 .line-inner { animation-duration: 15s; }
+#line3 .line-inner { animation-duration: 20s; }
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+/* Home link positioned below the white bar */
+.home-link-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.home-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 800;
+  transition: transform 0.3s ease;
+  transform: translateY(100%);
+  padding: 20px 0;
+}
+
+.home-link.visible {
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<h1>404</h1>
+
+<div class="bottom-bar" id="bottom-bar">
+  <div class="line" id="line1"><div class="line-inner" id="inner1"></div></div>
+  <div class="line" id="line2"><div class="line-inner" id="inner2"></div></div>
+  <div class="line" id="line3"><div class="line-inner" id="inner3"></div></div>
+</div>
+
+<!-- Home link container -->
+<div class="home-link-container">
+  <div class="home-link" id="home-link">CLICK ANYWHERE TO GO HOME</div>
+</div>
+
+<!-- Cursor div -->
+<div class="cursor" id="cursor"></div>
+
+<script>
+const words = ["404","NOT","FOUND","MISSING"];
+
+function populateLine(innerEl){
+  const arr = [];
+  for(let i=0;i<20;i++){
+    arr.push(...words.sort(()=>Math.random()-0.5));
+  }
+  arr.forEach(w=>{
+    const span = document.createElement('span');
+    span.textContent = w;
+    innerEl.appendChild(span);
+  });
+  const clone = innerEl.cloneNode(true);
+  innerEl.parentElement.appendChild(clone);
+}
+
+populateLine(document.getElementById('inner1'));
+populateLine(document.getElementById('inner2'));
+populateLine(document.getElementById('inner3'));
+
+const bottomBar = document.getElementById('bottom-bar');
+const homeLink = document.getElementById('home-link');
+const baseHeight = 100;
+
+document.addEventListener('mousemove', e => {
+  const mouseY = e.clientY;
+  const windowHeight = window.innerHeight;
+  
+  // Calculate new bar height based on mouse position
+  const newHeight = mouseY < (windowHeight - baseHeight) ? (windowHeight - mouseY) : baseHeight;
+  bottomBar.style.height = `${newHeight}px`;
+
+  // Show home link only if bar is scrolled up enough
+  if (newHeight > baseHeight + 100) { // adjust threshold
+    homeLink.classList.add('visible');
+  } else {
+    homeLink.classList.remove('visible');
+  }
+
+  // Move custom cursor
+  const cursor = document.getElementById('cursor');
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+});
+
+// Click anywhere to go home
+document.addEventListener('click', () => {
+  window.location.href = '/'; // replace with your actual home URL
+});
+</script>
+</body>
+</html>
