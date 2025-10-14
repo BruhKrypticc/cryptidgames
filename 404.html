@@ -87,7 +87,6 @@ h1 {
   mix-blend-mode: difference;
 }
 
-/* Home link positioned below the white bar */
 .home-link-container {
   position: absolute;
   bottom: 0;
@@ -128,12 +127,10 @@ h1 {
   <div class="line" id="line3"><div class="line-inner" id="inner3"></div></div>
 </div>
 
-<!-- Home link container -->
 <div class="home-link-container">
   <div class="home-link" id="home-link">CLICK ANYWHERE TO GO HOME</div>
 </div>
 
-<!-- Cursor div -->
 <div class="cursor" id="cursor"></div>
 
 <script>
@@ -165,11 +162,9 @@ document.addEventListener('mousemove', e => {
   const mouseY = e.clientY;
   const windowHeight = window.innerHeight;
   
-  // Calculate new bar height based on mouse position
   const newHeight = mouseY < (windowHeight - baseHeight) ? (windowHeight - mouseY) : baseHeight;
   bottomBar.style.height = `${newHeight}px`;
 
-  // Show home link only if bar is scrolled up enough
   if (newHeight > baseHeight + 100) { // adjust threshold
     homeLink.classList.add('visible');
   } else {
@@ -181,9 +176,8 @@ document.addEventListener('mousemove', e => {
   cursor.style.top = `${e.clientY}px`;
 });
 
-// Click anywhere to go home
 document.addEventListener('click', () => {
-  window.location.href = '/'; // replace with your actual home URL
+  window.location.href = '/';
 });
 </script>
 </body>
