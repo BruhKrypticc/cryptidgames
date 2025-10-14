@@ -57,40 +57,13 @@
     .fade-container { display: inline-flex; flex-direction: column; align-items: flex-start; font-size: 2.5em; font-weight: 800; opacity: 0; transform: translateY(20px); animation: fadeInUp 1s ease 0.6s forwards; white-space: nowrap; }
     .fade-main { display: inline-flex; align-items: center; white-space: nowrap; }
     .static-text { margin-right: 0; }
-
-    .rotating-text {
-      display: inline-block;
-      position: relative;
-      height: 1.2em;
-      overflow: hidden;
-    }
-    .rotating-text span {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      opacity: 0;
-      animation: rotateWords 8s linear infinite 0s;
-    }
-    .rotating-text span:nth-child(1) { animation-delay: 0s; }
-    .rotating-text span:nth-child(2) { animation-delay: 2s; }
-    .rotating-text span:nth-child(3) { animation-delay: 4s; }
-    .rotating-text span:nth-child(4) { animation-delay: 6s; }
-
-    @keyframes rotateWords {
-      0% { opacity: 0; transform: translateY(100%); }
-      5% { opacity: 1; transform: translateY(0); }
-      25% { opacity: 1; transform: translateY(0); }
-      30% { opacity: 0; transform: translateY(-100%); }
-      100% { opacity: 0; }
-    }
-
-    .fade-subtext { font-family:'Comic Sans MS',cursive; font-size:0.6em; margin-left:0; margin-top:0.2em; opacity:0; transition: opacity 0.5s ease; }
-
+    .fade-text-wrapper { position: relative; height: 1.2em; width: auto; }
+    .fade-text { position: absolute; top:0; left:0; font-size:1em; font-weight:800; color:white; opacity:0; transition: opacity 0.3s ease; }
+    .fade-subtext { font-family:'Comic Sans MS',cursive; font-size:0.6em; opacity:0; margin-left:0; margin-top:0.2em; }
     .arrow-button { margin-top:30px;width:50px;height:50px;border:2px solid white;background:transparent;border-radius:50%;cursor:pointer;display:flex;justify-content:center;align-items:center;color:white;font-size:1.8rem;transition:all .3s ease;animation:fadeInUp 1s ease 1.2s forwards;opacity:0;transform:translateY(20px);} 
     .arrow-button:hover{background:white;color:black;transform:scale(1.1);}
     @keyframes fadeInUp{to{opacity:1;transform:translateY(0);}} 
 
-    /* Projects */
     #projects { background:url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover no-repeat; min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:8vh 20px; text-align:center; }
     @media(min-width: 900px) {
       #projects { background-attachment: fixed; }
@@ -168,7 +141,7 @@
       }
       .fade-container { font-size: 2em; align-items: center; }
       .fade-main { justify-content: center; }
-      .rotating-text span { font-size: 2em; }
+      .fade-text { font-size: 2em; }
       .arrow-button { margin: 20px auto; }
       .soundtrack-container{flex-direction:column; text-align:center; align-items:center;}
       .soundtrack-text{align-items:center; margin-top:20px;}
@@ -188,20 +161,19 @@
     <div class="title">CRYPTID GAMES</div>
     <div class="fade-container">
       <div class="fade-main">
-        <span class="static-text">we are&nbsp;</span>
-        <span class="rotating-text">
-          <span>devs</span>
-          <span>spooky</span>
-          <span>cryptic</span>
-          <span data-pyrit="true">qold's portfolio</span>
-        </span>
+        <span class="static-text">we are&nbsp</span>
+        <div class="fade-text-wrapper">
+          <div class="fade-text" data-show-pyrit="false">devs</div>
+          <div class="fade-text" data-show-pyrit="false">spooky</div>
+          <div class="fade-text" data-show-pyrit="false">cryptic</div>
+          <div class="fade-text" data-show-pyrit="true">qold's portfolio</div>
+        </div>
       </div>
       <div class="fade-subtext" id="pyritSubtext">and pyrits too!</div>
     </div>
     <button class="arrow-button" id="arrow-down">↓</button>
   </section>
 
-  <!-- Projects -->
   <section id="projects">
     <div class="projects-title-container">
       <div class="roblox-game-title">ROBLOX GAME</div>
@@ -253,19 +225,18 @@
       }, 3500);
     });
 
-    const rotatingWords = document.querySelectorAll('.rotating-text span');
     const subtext = document.getElementById('pyritSubtext');
-    let currentIndex = 0;
-    function checkPyrit() {
-      rotatingWords.forEach((word, i) => {
-        if (i === currentIndex) {
-          subtext.style.opacity = word.dataset.pyrit === "true" ? 1 : 0;
-        }
-      });
-      currentIndex = (currentIndex + 1) % rotatingWords.length;
+    const fadeTexts = document.querySelectorAll('.fade-text');
+    let fadeIndex = 0;
+    function showFadeText() {
+      fadeTexts.forEach(t => t.style.opacity = 0);
+      const current = fadeTexts[fadeIndex];
+      current.style.opacity = 1;
+      subtext.style.opacity = current.dataset.showPyrit === "true" ? 1 : 0;
+      fadeIndex = (fadeIndex + 1) % fadeTexts.length;
     }
-    checkPyrit();
-    setInterval(checkPyrit, 2000);
+    showFadeText();
+    setInterval(showFadeText, 2000);
 
     const cards=document.querySelectorAll('.project-card');
     const observer=new IntersectionObserver(entries=>{
@@ -291,23 +262,34 @@
     },{threshold:0.2});
     footerObserver.observe(footer);
 
-    
+    // Modal
     const gameImages={
       ironbound:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%282%29.PNG?raw=true"],
       hideout:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%283%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%201%20%282%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%202%20%282%29.PNG?raw=true"],
-      undershadows:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%203.PNG?raw=true"]
+      undershadows:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%203.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%202.PNG?raw=true"]
     };
     const modal=document.getElementById('game-modal');
-    const slideshow=document.getElementById('modal-slideshow');
-    const closeModal=document.getElementById('close-modal');
     const modalLogo=document.getElementById('modal-logo');
-    let slideIndex=0; let interval;
-    function openModal(game,logo){modal.classList.add('visible');modalLogo.src=logo;slideshow.innerHTML='';gameImages[game].forEach((url,i)=>{const div=document.createElement('div');div.classList.add('modal-bg-image');if(i===0)div.classList.add('active');div.style.backgroundImage=`url(${url})`;slideshow.appendChild(div);});slideIndex=0;interval=setInterval(()=>{const slides=slideshow.querySelectorAll('.modal-bg-image');slides.forEach(s=>s.classList.remove('active'));slideIndex=(slideIndex+1)%slides.length;slides[slideIndex].classList.add('active');},4000);}
-    function closeModalFn(){modal.classList.remove('visible');clearInterval(interval);}
-    document.querySelectorAll('.project-card').forEach(card=>{card.addEventListener('click',()=>openModal(card.dataset.game,card.dataset.logo));});
-    closeModal.addEventListener('click',closeModalFn);
-
-    document.getElementById('arrow-down').addEventListener('click',()=>{document.getElementById('projects').scrollIntoView({behavior:'smooth'});});
+    const modalSlide=document.getElementById('modal-slideshow');
+    document.querySelectorAll('.project-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        modal.classList.add('visible');
+        modalLogo.src=card.dataset.logo;
+        modalSlide.innerHTML='';
+        gameImages[card.dataset.game].forEach(img=>{
+          const div=document.createElement('div');
+          div.className='modal-bg-image';
+          div.style.backgroundImage=`url(${img})`;
+          modalSlide.appendChild(div);
+        });
+        const slides=modalSlide.querySelectorAll('.modal-bg-image');
+        let idx=0;
+        function showSlide(i){slides.forEach((s,j)=>{s.classList.toggle('active',i===j);});}
+        showSlide(0);
+        setInterval(()=>{idx=(idx+1)%slides.length;showSlide(idx);},4000);
+      });
+    });
+    document.getElementById('close-modal').addEventListener('click',()=>modal.classList.remove('visible'));
   </script>
 </body>
 </html>
