@@ -9,7 +9,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; font-family: 'Inter', sans-serif; background: black; color: white; overflow-x: hidden; font-weight: 800; }
 
-    /* Loading Screen */
     #loading-screen {
       position: fixed;
       top: 0; left: 0;
@@ -44,7 +43,6 @@
       pointer-events: none;
     }
 
-    /* Hero */
     #hero {
       background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/realcgbg.PNG?raw=true') center/cover no-repeat;
       min-height: 100vh;
@@ -60,7 +58,6 @@
     .fade-main { display: inline-flex; align-items: center; white-space: nowrap; }
     .static-text { margin-right: 0; }
 
-    /* Rotating Text */
     .rotating-text {
       display: inline-block;
       position: relative;
@@ -106,11 +103,9 @@
     .project-card:hover{transform: scale(1.05);}
     .project-logo{width:100%;height:100%;object-fit:contain;border-radius:10px;pointer-events:none;background:transparent;}
 
-    /* Animate in (repeatable) */
     .animate-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .animate-in.visible { opacity: 1; transform: translateY(0); }
 
-    /* Soundtrack */
     #soundtrack { position: relative; min-height:55vh; display:flex; align-items:center; justify-content:center; padding:0 10vw; background: url('https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled342_20250415200246.PNG?raw=true') center/cover no-repeat; }
     #soundtrack::after { content:""; position:absolute; top:0; left:0; right:0; bottom:0; background-color: rgba(128,128,128,0.3); z-index:0; }
     #soundtrack > * { position:relative; z-index:1; }
@@ -120,7 +115,6 @@
     .under-shadows { font-family:'Oswald',sans-serif; font-size:15px; letter-spacing:10px; text-transform:uppercase; margin-bottom:10px; }
     .soundtrack-title { font-family:'Inter',sans-serif; font-weight:800; font-size:45px; }
 
-    /* Modal */
     #game-modal { position: fixed; top:0; left:0; width:100%; height:100%; background:black; opacity:0; pointer-events:none; transition:opacity .5s ease; z-index:1000; }
     #game-modal.visible { opacity:1; pointer-events:auto; }
     #modal-slideshow { position: relative; width:100%; height:100%; overflow:hidden; z-index:100; }
@@ -130,7 +124,6 @@
     #close-modal:hover { transform:rotate(90deg) scale(1.1); color:gray; }
     #modal-logo { position:absolute; bottom:20px; right:20px; height:80px; border-radius:10px; z-index:1100; animation:fadeInUp .8s ease forwards; }
 
-    /* Footer */
     footer {
       background:#111;
       padding:30px 0;
@@ -164,7 +157,6 @@
       height:24px;
     }
 
-    /* Mobile optimization */
     @media(max-width:900px){
       #hero, #projects {
         background-attachment: scroll !important;
@@ -185,7 +177,6 @@
 </head>
 <body>
 
-  <!-- Loading Screen -->
   <div id="loading-screen">
     <video id="loading-video" autoplay muted loop playsinline>
       <source src="https://github.com/BruhKrypticc/cryptidgames/raw/refs/heads/main/Overlay%20Super%20Black%20Background%20With%20Scratch%20And%20Dust%20Screen%20%20For%2016%2035mm.mp4" type="video/mp4">
@@ -193,7 +184,6 @@
     <img id="loading-logo" src="https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/Untitled333_20250725100632.PNG?raw=true" alt="Logo" />
   </div>
 
-  <!-- Hero -->
   <section id="hero">
     <div class="title">CRYPTID GAMES</div>
     <div class="fade-container">
@@ -230,7 +220,6 @@
     </div>
   </section>
 
-  <!-- Soundtrack -->
   <section id="soundtrack">
     <div class="soundtrack-container">
       <iframe class="soundtrack-embed" src="https://open.spotify.com/embed/album/5bGQyQwWGTRyOA3WuUfcZn?utm_source=generator&theme=0" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
@@ -241,14 +230,12 @@
     </div>
   </section>
 
-  <!-- Fullscreen Modal -->
   <div id="game-modal">
     <div id="close-modal">✖</div>
     <img id="modal-logo" src="" alt="Game Logo" />
     <div id="modal-slideshow"></div>
   </div>
 
-  <!-- Footer -->
   <footer>
     <div class="footer-social">
       <a href="#"><img src="https://img.icons8.com/ios-filled/50/ffffff/discord-logo.png" alt="Discord" /></a>
@@ -258,7 +245,6 @@
   </footer>
 
   <script>
-    // Loading Screen
     window.addEventListener('load', () => {
       const loader = document.getElementById('loading-screen');
       setTimeout(() => {
@@ -267,7 +253,6 @@
       }, 3500);
     });
 
-    // Rotating text subtext toggle
     const rotatingWords = document.querySelectorAll('.rotating-text span');
     const subtext = document.getElementById('pyritSubtext');
     let currentIndex = 0;
@@ -282,7 +267,6 @@
     checkPyrit();
     setInterval(checkPyrit, 2000);
 
-    // Project cards animation - repeat
     const cards=document.querySelectorAll('.project-card');
     const observer=new IntersectionObserver(entries=>{
       entries.forEach(e=>{
@@ -292,7 +276,6 @@
     },{threshold:0.2});
     cards.forEach(c=>observer.observe(c));
 
-    // Footer social buttons appear one by one
     const footerIcons=document.querySelectorAll('.footer-social a');
     function revealFooterIcons(){
       footerIcons.forEach((icon,i)=>{
@@ -308,7 +291,7 @@
     },{threshold:0.2});
     footerObserver.observe(footer);
 
-    // Modal
+    
     const gameImages={
       ironbound:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%282%29.PNG?raw=true"],
       hideout:["https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%20%283%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%201%20%282%29.PNG?raw=true","https://github.com/BruhKrypticc/cryptidgames/blob/main/imgs/image%202%20%282%29.PNG?raw=true"],
@@ -324,7 +307,6 @@
     document.querySelectorAll('.project-card').forEach(card=>{card.addEventListener('click',()=>openModal(card.dataset.game,card.dataset.logo));});
     closeModal.addEventListener('click',closeModalFn);
 
-    // Arrow scroll
     document.getElementById('arrow-down').addEventListener('click',()=>{document.getElementById('projects').scrollIntoView({behavior:'smooth'});});
   </script>
 </body>
