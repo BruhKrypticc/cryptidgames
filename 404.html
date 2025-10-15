@@ -11,12 +11,19 @@ html, body {
   height: 100%;
   background: #000;
   font-family: 'Inter', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow: hidden;
   color: #fff;
   cursor: none;
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 1s ease, opacity 1s ease;
+  transform-origin: center center;
 }
 
 h1 {
@@ -26,6 +33,9 @@ h1 {
   z-index: 1;
   position: relative;
   mix-blend-mode: difference;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1s ease, transform 1s ease;
 }
 
 .bottom-bar {
@@ -40,9 +50,10 @@ h1 {
   font-weight: 800;
   font-size: 2.5rem;
   line-height: 2.5rem;
-  transition: height 0.05s ease;
+  transition: height 0.05s ease, opacity 1s ease, transform 1s ease;
   height: 100px;
   padding-bottom: 0.5rem;
+  opacity: 0;
 }
 
 .line {
@@ -82,9 +93,10 @@ h1 {
   border: 2px solid #fff;
   border-radius: 50%;
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
   z-index: 9999;
   mix-blend-mode: difference;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .home-link-container {
@@ -115,23 +127,47 @@ h1 {
 .home-link.visible {
   transform: translateY(0);
 }
+
+.out h1 {
+  transform: scale(1.3);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.out .cursor {
+  transform: translate(-50%, -50%) scale(6);
+  opacity: 0;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.out .bottom-bar {
+  transform: translateY(100%);
+  transition: transform 0.8s ease-in;
+}
+
+.zoom-out {
+  transform: scale(0.95);
+  opacity: 0;
+}
 </style>
 </head>
 <body>
 
-<h1>404</h1>
+<main id="main">
+  <h1 id="title">404</h1>
 
-<div class="bottom-bar" id="bottom-bar">
-  <div class="line" id="line1"><div class="line-inner" id="inner1"></div></div>
-  <div class="line" id="line2"><div class="line-inner" id="inner2"></div></div>
-  <div class="line" id="line3"><div class="line-inner" id="inner3"></div></div>
-</div>
+  <div class="bottom-bar" id="bottom-bar">
+    <div class="line" id="line1"><div class="line-inner" id="inner1"></div></div>
+    <div class="line" id="line2"><div class="line-inner" id="inner2"></div></div>
+    <div class="line" id="line3"><div class="line-inner" id="inner3"></div></div>
+  </div>
 
-<div class="home-link-container">
-  <div class="home-link" id="home-link">CLICK ANYWHERE TO GO HOME</div>
-</div>
+  <div class="home-link-container">
+    <div class="home-link" id="home-link">CLICK ANYWHERE TO GO HOME</div>
+  </div>
 
-<div class="cursor" id="cursor"></div>
+  <div class="cursor" id="cursor"></div>
+</main>
 
 <script>
 const words = ["404","NOT","FOUND","MISSING"];
@@ -142,11 +178,11 @@ function populateLine(innerEl){
     arr.push(...words.sort(()=>Math.random()-0.5));
   }
   arr.forEach(w=>{
-    const span = document.createElement('span');
-    span.textContent = w;
+    const span=document.createElement('span');
+    span.textContent=w;
     innerEl.appendChild(span);
   });
-  const clone = innerEl.cloneNode(true);
+  const clone=innerEl.cloneNode(true);
   innerEl.parentElement.appendChild(clone);
 }
 
@@ -154,30 +190,39 @@ populateLine(document.getElementById('inner1'));
 populateLine(document.getElementById('inner2'));
 populateLine(document.getElementById('inner3'));
 
-const bottomBar = document.getElementById('bottom-bar');
-const homeLink = document.getElementById('home-link');
-const baseHeight = 100;
+const bottomBar=document.getElementById('bottom-bar');
+const homeLink=document.getElementById('home-link');
+const cursor=document.getElementById('cursor');
+const title=document.getElementById('title');
+const main=document.getElementById('main');
+const baseHeight=100;
 
-document.addEventListener('mousemove', e => {
-  const mouseY = e.clientY;
-  const windowHeight = window.innerHeight;
-  
-  const newHeight = mouseY < (windowHeight - baseHeight) ? (windowHeight - mouseY) : baseHeight;
-  bottomBar.style.height = `${newHeight}px`;
-
-  if (newHeight > baseHeight + 100) { // adjust threshold
-    homeLink.classList.add('visible');
-  } else {
-    homeLink.classList.remove('visible');
-  }
-
-  const cursor = document.getElementById('cursor');
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
+window.addEventListener('load',()=>{
+  title.style.opacity='1';
+  title.style.transform='translateY(0)';
+  bottomBar.style.opacity='1';
+  cursor.style.transform='translate(-50%, -50%) scale(1)';
 });
 
-document.addEventListener('click', () => {
-  window.location.href = '/';
+document.addEventListener('mousemove',e=>{
+  const mouseY=e.clientY;
+  const windowHeight=window.innerHeight;
+  const newHeight=mouseY<(windowHeight-baseHeight)?(windowHeight-mouseY):baseHeight;
+  bottomBar.style.height=`${newHeight}px`;
+  if(newHeight>baseHeight+100) homeLink.classList.add('visible');
+  else homeLink.classList.remove('visible');
+  cursor.style.left=`${e.clientX}px`;
+  cursor.style.top=`${e.clientY}px`;
+});
+
+document.addEventListener('click',()=>{
+  document.body.classList.add('out');
+  setTimeout(()=>{
+    main.classList.add('zoom-out');
+  },600);
+  setTimeout(()=>{
+    window.location.href='/';
+  },2000);
 });
 </script>
 </body>
